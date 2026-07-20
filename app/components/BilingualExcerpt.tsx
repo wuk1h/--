@@ -6,6 +6,9 @@ import type { Excerpt } from '@/lib/archive';
 export function BilingualExcerpt({ excerpt }: { excerpt: Excerpt }) {
   const [language, setLanguage] = useState<'zh' | 'ja'>('zh');
   const canShowJapanese = Boolean(excerpt.ja);
+  const text = language === 'ja' && excerpt.ja
+    ? excerpt.ja
+    : excerpt.zh || '该插画附近暂未提取到中文正文。';
 
   return (
     <div>
@@ -23,7 +26,7 @@ export function BilingualExcerpt({ excerpt }: { excerpt: Excerpt }) {
         </button>
       </div>
       <p className="excerpt-text" lang={language === 'ja' ? 'ja' : 'zh-CN'}>
-        {language === 'ja' && excerpt.ja ? excerpt.ja : excerpt.zh || '该插画邻近段落暂未提取到中文文本。'}
+        {text}
       </p>
       <p className="excerpt-source">EPUB SOURCE / {excerpt.sourceFile}</p>
     </div>

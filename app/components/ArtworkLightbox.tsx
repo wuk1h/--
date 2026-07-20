@@ -26,6 +26,7 @@ export function ArtworkLightbox({
   const touchStartX = useRef<number | null>(null);
   const excerpt = artwork.excerptId ? excerptById.get(artwork.excerptId) : undefined;
   const volume = volumeById.get(artwork.volumeId);
+  const title = artwork.title ?? `${artwork.id.toUpperCase()} 插画`;
 
   const onKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -78,7 +79,7 @@ export function ArtworkLightbox({
       className="lightbox"
       role="dialog"
       aria-modal="true"
-      aria-label={`${volume?.label ?? artwork.volumeId}插画详情`}
+      aria-label={`${volume?.label ?? artwork.volumeId} 插画详情`}
       ref={panelRef}
     >
       <button className="icon-button lightbox__close" type="button" aria-label="关闭插画" onClick={onClose}>
@@ -103,14 +104,22 @@ export function ArtworkLightbox({
       </div>
       <aside className="lightbox__panel">
         <p className="lightbox__meta">{artwork.id.toUpperCase()} / {volume?.label} / {artwork.colorMode.toUpperCase()}</p>
-        <h2>{artwork.chapter || volume?.label}</h2>
-        <div className="lightbox__characters">
+        <h2>{title}</h2>
+        <p className="lightbox__description">
+          {artwork.sceneDescription ?? '该插画未进行人物标注；保留在卷宗与全量画廊中，不进入角色档案。'}
+        </p>
+        <div className="lightbox__characters" aria-label="人物名单">
           {artwork.characterIds.length ? artwork.characterIds.map((id) => (
             <span key={id}>{characterById.get(id)?.name}</span>
-          )) : <span>人物未作高置信标注</span>}
+          )) : <span>未进行人物标注</span>}
         </div>
+        <dl className="lightbox__facts">
+          <div><dt>卷章来源</dt><dd>{artwork.sourceChapter ?? artwork.chapter}</dd></div>
+          <div><dt>描述状态</dt><dd>{artwork.descriptionReviewStatus === 'verified' ? '人工复核' : '未发布标注'}</dd></div>
+          <div><dt>素材版权</dt><dd>用户提供 EPUB 官方插画；本站仅作个人档案展示，不声称拥有版权。</dd></div>
+        </dl>
         {excerpt ? <BilingualExcerpt excerpt={excerpt} /> : (
-          <p className="excerpt-text">该图像为卷首、封面或附录素材，没有可安全关联的正文摘录。</p>
+          <p className="excerpt-text">该图像为封面、卷首或附录素材，暂无可安全关联的正文摘录。</p>
         )}
       </aside>
     </div>
