@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import Image from '@/app/components/ArchiveImage';
 import { notFound } from 'next/navigation';
 import { getArtworksForVolume, getVolume, volumes } from '@/lib/archive';
 import { ArtworkMosaic } from '@/app/components/ArtworkMosaic';

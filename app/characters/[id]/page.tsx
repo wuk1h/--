@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import Image from '@/app/components/ArchiveImage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
@@ -18,6 +18,7 @@ import { ArtworkMosaic } from '@/app/components/ArtworkMosaic';
 import { BilingualExcerpt } from '@/app/components/BilingualExcerpt';
 import { OfficialVideoEmbed } from '@/app/components/OfficialVideoEmbed';
 import { SectionIntro } from '@/app/components/SectionIntro';
+import { DossierMotion } from '@/app/components/DossierMotion';
 
 export function generateStaticParams() {
   return characters.map((character) => ({ id: character.id }));
@@ -168,7 +169,7 @@ function CharacterRelationshipRecords({ dossier }: { dossier: CharacterDossier }
               </>
             );
             return linked ? (
-              <Link className="relationship-record" href={`/characters/${linked.id}/`} key={connection.id}>
+              <Link className="relationship-record" data-character-target={linked.id} href={`/characters/${linked.id}/`} key={connection.id}>
                 {content}
               </Link>
             ) : (
@@ -247,9 +248,12 @@ function ExternalMediaRail({ dossier }: { dossier: CharacterDossier }) {
             </article>
             {dossier.anime.videos.map((video) => (
               <OfficialVideoEmbed
-                key={video.youtubeId}
+                key={video.bvid ?? video.youtubeId ?? video.title}
                 title={video.title}
                 youtubeId={video.youtubeId}
+                bvid={video.bvid}
+                provider={video.provider}
+                sourceUrl={video.sourceUrl}
                 accent={character.accent}
               />
             ))}
@@ -286,6 +290,7 @@ export default async function CharacterPage({ params }: { params: Promise<{ id: 
   if (!character || !dossier) notFound();
 
   return (
+    <DossierMotion>
     <div className="detail-page dossier-page">
       <CharacterDossierHeader dossier={dossier} />
       <div className="fact-strip fact-strip--dossier">
@@ -300,5 +305,6 @@ export default async function CharacterPage({ params }: { params: Promise<{ id: 
       <ExternalMediaRail dossier={dossier} />
       <CharacterPager dossier={dossier} />
     </div>
+    </DossierMotion>
   );
 }

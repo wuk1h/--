@@ -120,7 +120,17 @@ export interface CharacterAnimeProfile {
   status: 'covered' | 'not-covered';
   voiceActor: string;
   officialCharacterUrl?: string;
-  videos: Array<{ title: string; youtubeId: string; sourceUrl: string }>;
+  videos: Array<{
+    title: string;
+    provider?: 'bilibili' | 'youtube';
+    youtubeId?: string;
+    bvid?: string;
+    aid?: string;
+    cid?: string;
+    sourceUrl: string;
+    durationSeconds?: number;
+    officialAccount?: string;
+  }>;
   checkedAt: string;
 }
 

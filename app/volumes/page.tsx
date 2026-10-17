@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import Image from '@/app/components/ArchiveImage';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { archiveMeta, volumes } from '@/lib/archive';

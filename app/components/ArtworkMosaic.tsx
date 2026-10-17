@@ -1,7 +1,8 @@
 'use client';
 
-import Image from 'next/image';
+import Image from './ArchiveImage';
 import { useState } from 'react';
+import type { CSSProperties } from 'react';
 import { volumeById, type Artwork } from '@/lib/archive';
 import { ArtworkLightbox } from './ArtworkLightbox';
 
@@ -28,6 +29,8 @@ export function ArtworkMosaic({
               key={artwork.id}
               type="button"
               onClick={() => setActiveIndex(index)}
+              data-mono={artwork.colorMode === 'mono' ? 'true' : undefined}
+              style={{ viewTransitionName: `artwork-${artwork.id}` } as CSSProperties}
               aria-label={`查看 ${artwork.title ?? artwork.id} 插画详情`}
             >
               <Image

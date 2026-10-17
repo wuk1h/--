@@ -1,6 +1,7 @@
 'use client';
 
-import Image from 'next/image';
+import Image from './ArchiveImage';
+import { assetPath } from '@/lib/asset-path';
 import Link from 'next/link';
 import { ArrowRight, BookOpenText, Images, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
@@ -60,11 +61,15 @@ function bindLoopControls(controller: AutoLoopController, reducedMotion = false)
     }, 2500);
   };
   const onPointerEnter = (event: PointerEvent) => {
-    if (event.pointerType === 'mouse') controller.hovered = true;
+    if (event.pointerType === 'mouse') {
+      controller.hovered = true;
+      viewport.classList.add('is-hovered');
+    }
   };
   const onPointerLeave = (event: PointerEvent) => {
     if (event.pointerType === 'mouse') {
       controller.hovered = false;
+      viewport.classList.remove('is-hovered');
       delayResume();
     }
   };
@@ -80,12 +85,14 @@ function bindLoopControls(controller: AutoLoopController, reducedMotion = false)
     pointerStartX = event.clientX;
     pointerStartScroll = viewport.scrollLeft;
     viewport.classList.add('is-dragging');
-    viewport.setPointerCapture(pointerId);
   };
   const onPointerMove = (event: PointerEvent) => {
     if (!dragging || event.pointerId !== pointerId) return;
     const distance = event.clientX - pointerStartX;
-    if (Math.abs(distance) > 5) dragged = true;
+    if (Math.abs(distance) > 5 && !dragged) {
+      dragged = true;
+      viewport.setPointerCapture(pointerId);
+    }
     if (!dragged) return;
     event.preventDefault();
     viewport.scrollLeft = pointerStartScroll - distance;
@@ -146,7 +153,7 @@ function bindLoopControls(controller: AutoLoopController, reducedMotion = false)
 
   return () => {
     window.clearTimeout(resumeTimer);
-    viewport.classList.remove('is-dragging', 'is-manual-pause');
+    viewport.classList.remove('is-dragging', 'is-manual-pause', 'is-hovered');
     viewport.removeEventListener('pointerenter', onPointerEnter);
     viewport.removeEventListener('pointerleave', onPointerLeave);
     viewport.removeEventListener('pointerdown', onPointerDown);
@@ -619,7 +626,7 @@ export function HomeExperience() {
         </div>
       </section>
 
-      <section className="home-section" style={{ backgroundImage: 'url(/archive/backgrounds/literature-room.webp)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="home-section" style={{ backgroundImage: `url(${assetPath('/archive/backgrounds/literature-room.webp')})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="page-shell" data-reveal>
           <div style={{ maxWidth: 560, padding: 32, background: 'var(--paper)', border: '1px solid var(--ink)', boxShadow: '8px 9px 0 var(--ink)' }}>
             <p className="eyebrow">SOURCE NOTE / 2026.07</p>

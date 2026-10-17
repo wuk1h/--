@@ -25,7 +25,6 @@ from PIL import Image, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SOURCE = Path(r"C:\Users\wukaix\Desktop\败犬\日文")
 PUBLIC_ROOT = ROOT / "public" / "archive"
 DATA_OUT = ROOT / "lib" / "archive.generated.json"
 
@@ -388,7 +387,7 @@ def image_mode_is_color(raw: bytes) -> bool:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
+    parser.add_argument("--source", type=Path, required=True, help="Directory containing the user-supplied EPUB files")
     args = parser.parse_args()
     source_dir = args.source.resolve()
     if not source_dir.is_dir():
@@ -413,7 +412,7 @@ def main() -> None:
         print(f"[ok] {volume['label']}: {len(volume_artworks)} artworks")
 
     payload = {
-        "generatedFrom": str(source_dir),
+        "generatedFrom": "user-supplied EPUB collection",
         "collectionLabel": "第 1–8 卷 + SSS",
         "publishedStatus": "9+1+1 册（2026.07）",
         "volumes": volumes,

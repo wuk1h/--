@@ -23,7 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # Local env files
-.env*.local
+.env
+.env.*
+!.env.example
 
 # Vercel
 .vercel
@@ -31,3 +33,20 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local distribution packages, downloads and private tool state (keep off GitHub)
+/release/
+/downloads/
+/tmpffmpeg/
+/.workbuddy/
+/portable-macos/bin/
+__pycache__/
+*.pyc
+.server.pid
+/.playwright-cli/
+/hangzhou-typhoon-first-person.png
+
+# Superseded local audits of the old blog template
+/CODE_AUDIT_REPORT.md
+/UI_AUDIT_REPORT.md
+/FIX_REPORT.md

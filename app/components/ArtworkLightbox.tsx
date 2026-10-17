@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import Image from './ArchiveImage';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useCallback, useEffect, useRef } from 'react';
 import {
@@ -55,13 +55,16 @@ export function ArtworkLightbox({
     const previousFocus = document.activeElement as HTMLElement | null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    document.addEventListener('keydown', onKeyDown);
     panelRef.current?.querySelector<HTMLElement>('button')?.focus();
     return () => {
       document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', onKeyDown);
-      previousFocus?.focus();
+      previousFocus?.focus({ preventScroll: true });
     };
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [onKeyDown]);
 
   const finishSwipe = (clientX: number) => {
@@ -90,7 +93,7 @@ export function ArtworkLightbox({
         onTouchStart={(event) => { touchStartX.current = event.changedTouches[0].clientX; }}
         onTouchEnd={(event) => finishSwipe(event.changedTouches[0].clientX)}
       >
-        <Image src={artwork.src} alt={artwork.alt} fill priority sizes="(max-width: 760px) 100vw, 74vw" />
+        <Image src={artwork.src} alt={artwork.alt} fill priority sizes="(max-width: 760px) 100vw, 74vw" style={{ viewTransitionName: `artwork-${artwork.id}` }} />
         {onPrevious && (
           <button className="lightbox-nav lightbox-nav--prev" type="button" aria-label="上一张" onClick={onPrevious}>
             <ChevronLeft aria-hidden="true" />

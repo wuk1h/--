@@ -62,6 +62,12 @@ for (const id of characterIds) {
   }
 }
 
+for (const line of archiveSource.matchAll(/provider:\s*'bilibili'[^\n]*bvid:\s*'([^']+)'[^\n]*sourceUrl:\s*'([^']+)'/g)) {
+  const [, bvid, sourceUrl] = line;
+  if (!/^BV[0-9A-Za-z]{10}$/.test(bvid)) errors.push(`invalid bilibili bvid: ${bvid}`);
+  if (!/^https:\/\/(www\.)?bilibili\.com\//.test(sourceUrl)) errors.push(`non-bilibili source: ${sourceUrl}`);
+}
+
 if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
